@@ -1,5 +1,5 @@
 <?php
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design ( http://aucoeurdesign.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -15,8 +15,8 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define( 'PFUND_PAYPAL_PROD_URL', 'https://www.paypal.com/cgi-bin/webscr' );
-define( 'PFUND_PAYPAL_SANDBOX_URL', 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
+define( 'bnfund_PAYPAL_PROD_URL', 'https://www.paypal.com/cgi-bin/webscr' );
+define( 'bnfund_PAYPAL_SANDBOX_URL', 'https://www.sandbox.paypal.com/cgi-bin/webscr' );
 
 /**
  * Process a PayPal transaction using PayPal's Payment Data Transfer method.
@@ -35,10 +35,10 @@ define( 'PFUND_PAYPAL_SANDBOX_URL', 'https://www.sandbox.paypal.com/cgi-bin/webs
  *	 wp_error -- If the error_code is wp_error, the WP_Error object returned.
  *	 error_msg -- Text message describing error encountered.
  */
-function pfund_process_paypal_pdt() {
+function bnfund_process_paypal_pdt() {
 	$return_array = array( 'success' => false );
 	try {
-		$options = get_option( 'pfund_options' );
+		$options = get_option( 'bnfund_options' );
 		$auth_token = $options['paypal_pdt_token'];
 		$tx_token = $_GET['tx'];
 		$request_body = array(
@@ -46,7 +46,7 @@ function pfund_process_paypal_pdt() {
 			'tx' => $tx_token,
 			'at' => $auth_token,
 		);
-		$response = _pfund_call_paypal( $request_body, $options['paypal_sandbox'] );
+		$response = _bnfund_call_paypal( $request_body, $options['paypal_sandbox'] );
 		if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
 			$lines = explode( "\n", $response['body'] );
 			$keyarray = array();
@@ -59,17 +59,17 @@ function pfund_process_paypal_pdt() {
 					}
 				}
 				$return_array['success'] = true;
-				$return_array = _pfund_map_paypal_fields( $keyarray, $return_array );
+				$return_array = _bnfund_map_paypal_fields( $keyarray, $return_array );
 			} else {
 				$return_array['error_code'] = 'paypal_returned_failure';
 				$return_array['error_msg'] = 'PayPal did not return a successful result.  Response was'.$response['body'];
 			}
 		} else {
-			$return_array = _pfund_handle_paypal_error( $response, $return_array );
+			$return_array = _bnfund_handle_paypal_error( $response, $return_array );
 		}
 	} catch ( Exception $e ) {
 		$return_array['error_code'] = 'exception_encountered';
-		$return_array['error_msg'] = 'pfund_process_paypal_pdt throw the following exception:'.$e->getMessage();
+		$return_array['error_msg'] = 'bnfund_process_paypal_pdt throw the following exception:'.$e->getMessage();
 	}
 	return $return_array;
 }
@@ -92,27 +92,27 @@ function pfund_process_paypal_pdt() {
  *	 wp_error -- If the error_code is wp_error, the WP_Error object returned.
  *	 error_msg -- Text message describing error encountered.
  */
-function pfund_process_paypal_ipn() {
+function bnfund_process_paypal_ipn() {
 	$return_array = array( 'success' => false );
 	try {
         $request_body = stripslashes_deep($_POST);
 		$request_body['cmd'] = '_notify-validate';
-		$response = _pfund_call_paypal( $request_body, $options['paypal_sandbox'] );
+		$response = _bnfund_call_paypal( $request_body, $options['paypal_sandbox'] );
 		if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) ) {
 			if ( strcmp( $response['body'], "VERIFIED") == 0 ) {
 				$return_array['success'] = true;
-				$return_array = _pfund_map_paypal_fields( $_POST, $return_array );
+				$return_array = _bnfund_map_paypal_fields( $_POST, $return_array );
 			} else {
 				$return_array['error_code'] = 'paypal_returned_failure';
 				$return_array['error_msg'] = 'PayPal did not return a successful result.  Response was'.$response['body'];
 			}
 		} else {
-			$return_array = _pfund_handle_paypal_error( $response, $return_array );
+			$return_array = _bnfund_handle_paypal_error( $response, $return_array );
 		}
 		//https://www.paypal.com
 	} catch ( Exception $e ) {
 		$return_array['error_code'] = 'exception_encountered';
-		$return_array['error_msg'] = 'pfund_process_paypal_ipn throw the following exception:'.$e->getMessage();
+		$return_array['error_msg'] = 'bnfund_process_paypal_ipn throw the following exception:'.$e->getMessage();
 	}
 	return $return_array;
 }
@@ -126,7 +126,7 @@ function pfund_process_paypal_ipn() {
  * @return array $return_array The array that will be returned from processing
  * the transaction.
  */
-function _pfund_map_paypal_fields( $paypal_response, $return_array ) {
+function _bnfund_map_paypal_fields( $paypal_response, $return_array ) {
 	$return_array['amount'] = $paypal_response['mc_gross'];
 	$return_array['donor_first_name'] = $paypal_response['first_name'];
 	$return_array['donor_last_name'] = $paypal_response['last_name'];
@@ -145,11 +145,11 @@ function _pfund_map_paypal_fields( $paypal_response, $return_array ) {
  * otherwise call PayPal production.
  * @return mixed response of PayPal call.
  */
-function _pfund_call_paypal( $request_body, $use_sandbox ) {
+function _bnfund_call_paypal( $request_body, $use_sandbox ) {
 	if ( $use_sandbox ) {
-		$paypal_url = PFUND_PAYPAL_SANDBOX_URL;
+		$paypal_url = bnfund_PAYPAL_SANDBOX_URL;
 	} else {
-		$paypal_url = PFUND_PAYPAL_PROD_URL;
+		$paypal_url = bnfund_PAYPAL_PROD_URL;
 	}
 	$response = wp_remote_post( $paypal_url,
 		array( 'body' => $request_body, 'timeout' => 10 )
@@ -165,7 +165,7 @@ function _pfund_call_paypal( $request_body, $use_sandbox ) {
  * @return array $return_array The array that will be returned from processing
  * the transaction.
  */
-function _pfund_handle_paypal_error( $response,  $return_array ) {
+function _bnfund_handle_paypal_error( $response,  $return_array ) {
 	if ( is_wp_error( $response ) ) {
 		$return_array['wp_error'] = $response;
 		$return_array['error_code'] = 'wp_error';

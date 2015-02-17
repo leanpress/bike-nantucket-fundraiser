@@ -1,5 +1,5 @@
 <?php
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design ( http://aucoeurdesign.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -21,12 +21,12 @@
  *
  * @see WP_Post_Comments_List_Table
  */
-class PFund_Donor_List_Table extends WP_Post_Comments_List_Table {
+class bnfund_Donor_List_Table extends WP_Post_Comments_List_Table {
 
     var $currency_symbol;
 
     function __construct( $args = array() ) {
-        $options = get_option( 'pfund_options' );
+        $options = get_option( 'bnfund_options' );
         $this->currency_symbol = $options['currency_symbol'];
 		parent::__construct( $args );
     }
@@ -34,9 +34,9 @@ class PFund_Donor_List_Table extends WP_Post_Comments_List_Table {
     function get_column_info() {
 		$this->_column_headers = array(
 			array(
-			'author'   => __( 'Donor Information', 'pfund' ),
-			'comment'  => __( 'Comment', 'pfund' ),
-            'amount'  => __( 'Amount', 'pfund' ),
+			'author'   => __( 'Donor Information', 'bnfund' ),
+			'comment'  => __( 'Comment', 'bnfund' ),
+            'amount'  => __( 'Amount', 'bnfund' ),
 			),
 			array(),
 			array(),
@@ -46,7 +46,7 @@ class PFund_Donor_List_Table extends WP_Post_Comments_List_Table {
 	}
 
     function column_amount( $comment ) {
-        $trans_amount = get_comment_meta($comment->comment_ID, 'pfund_trans_amount',true);
+        $trans_amount = get_comment_meta($comment->comment_ID, 'bnfund_trans_amount',true);
         echo $this->currency_symbol . number_format_i18n( floatval( $trans_amount ), 2 );
     }
     

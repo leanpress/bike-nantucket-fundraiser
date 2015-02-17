@@ -1,5 +1,5 @@
 <?php
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design ( http://aucoeurdesign.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -18,15 +18,15 @@
 /**
  * Ajax call to process donation using Authorize.Net 
  */
-function pfund_auth_net_donation() {	
+function bnfund_auth_net_donation() {	
     $campaign_id = $_POST['post_id'];
     $gentime = $_POST['g'];    
     $msg = array();
-    if ( wp_verify_nonce( $_POST['n'],  'pfund-donate-campaign'.$campaign_id.$gentime ) ) {
+    if ( wp_verify_nonce( $_POST['n'],  'bnfund-donate-campaign'.$campaign_id.$gentime ) ) {
         $post = get_post( $campaign_id );
-        $transaction_array = pfund_process_authorize_net();            
+        $transaction_array = bnfund_process_authorize_net();            
         if ($transaction_array['success']) {
-            pfund_add_gift( $transaction_array, $post ); 
+            bnfund_add_gift( $transaction_array, $post ); 
             $msg['success'] = true;
         } else {
             $msg['success'] = false;
@@ -34,7 +34,7 @@ function pfund_auth_net_donation() {
         }	
     } else {
         $msg['success'] = false;
-        $msg['error'] =  __( 'You are not permitted to perform this action.', 'pfund' );        
+        $msg['error'] =  __( 'You are not permitted to perform this action.', 'bnfund' );        
     }
 	echo json_encode($msg);
 	die();
@@ -46,7 +46,7 @@ function pfund_auth_net_donation() {
  * @param string $format current format of date.
  * @return string date in iso8601 format.
  */
-function pfund_date_to_iso8601( $date, $format ) {
+function bnfund_date_to_iso8601( $date, $format ) {
 	if( class_exists( 'DateTime' ) && method_exists( 'DateTime', 'createFromFormat' ) ) {
 		$date = DateTime::createFromFormat( $format, $date );
 		if ( $date ) {
@@ -123,8 +123,8 @@ function pfund_date_to_iso8601( $date, $format ) {
  * @param string $type The type of field.
  * @return string the corresponding shortcode.
  */
-function pfund_determine_shortcode( $id, $type = '' ) {
-	$scode = '[pfund-'.$id;
+function bnfund_determine_shortcode( $id, $type = '' ) {
+	$scode = '[bnfund-'.$id;
 	if ( $type == 'fixed' ) {
 		$scode .= ' value="?"';
 	}
@@ -140,22 +140,22 @@ function pfund_determine_shortcode( $id, $type = '' ) {
  * @param string $type The type of file.  Valid values are js or css.
  * @return string the file location to use.
  */
-function pfund_determine_file_location( $name, $type ) {
+function bnfund_determine_file_location( $name, $type ) {
 	$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '.dev' : '';
-	return PFUND_URL."$type/$name$suffix.$type";
+	return bnfund_URL."$type/$name$suffix.$type";
 }
 
 /**
  * If the option is set to use ssl for campaigns, redirect campaign pages to 
  * secure.
  */
-function pfund_force_ssl_for_campaign_pages() {
+function bnfund_force_ssl_for_campaign_pages() {
 	global $post;     
-    if ( ! is_admin() && $post && $post->post_type == 'pfund_campaign' ) {
-        $options = get_option( 'pfund_options' ); 
+    if ( ! is_admin() && $post && $post->post_type == 'bnfund_campaign' ) {
+        $options = get_option( 'bnfund_options' ); 
         if ( ! empty ( $options['use_ssl'] ) && ! is_ssl() ) {
             $ssl_redirect = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-            $ssl_redirect = apply_filters( 'pfund_ssl_campaign_location', $ssl_redirect );
+            $ssl_redirect = apply_filters( 'bnfund_ssl_campaign_location', $ssl_redirect );
             wp_redirect( $ssl_redirect, 301 );
 	   		exit();
 	   	}
@@ -163,21 +163,21 @@ function pfund_force_ssl_for_campaign_pages() {
 }
 
 /**
- * Filter to campaigns to use content from the cause they where created from.
+ * Filter to campaigns to use content from the event they where created from.
  * @param string $content The current post content
- * @return string The cause content if the post is a personal fundraiser
+ * @return string The event content if the post is a personal fundraiser
  * campaign; otherwise return the content unmodified.
  */
-function pfund_handle_content( $content ) {
-	global $post, $pfund_update_message;
-	if( $post->ID == null || ! pfund_is_pfund_post() ) {
+function bnfund_handle_content( $content ) {
+	global $post, $bnfund_update_message;
+	if( $post->ID == null || ! bnfund_is_bnfund_post() ) {
 		return $content;
-	} else if ( $post->post_type == 'pfund_campaign' ) {
-		$causeid = get_post_meta( $post->ID, '_pfund_cause_id', true ) ;
-		$cause = get_post( $causeid );
-		return $cause->post_content.$pfund_update_message;
-	} else if ( $post->post_type == 'pfund_cause' ) {
-		return $post->post_content.$pfund_update_message;
+	} else if ( $post->post_type == 'bnfund_campaign' ) {
+		$eventid = get_post_meta( $post->ID, '_bnfund_event_id', true ) ;
+		$event = get_post( $eventid );
+		return $event->post_content.$bnfund_update_message;
+	} else if ( $post->post_type == 'bnfund_event' ) {
+		return $post->post_content.$bnfund_update_message;
 	}
 }
 
@@ -190,17 +190,17 @@ function pfund_handle_content( $content ) {
  * @return boolean true if the current post is a personal fundraiser post type;
  * otherwise return false.
  */
-function pfund_is_pfund_post( $post_to_check = false, $include_lists = false ) {
+function bnfund_is_bnfund_post( $post_to_check = false, $include_lists = false ) {
 	if ( ! $post_to_check ) {
 		global $post;
 		$post_to_check = $post;
 	}
-	$pfund_post_types = array( 'pfund_cause', 'pfund_campaign' );
+	$bnfund_post_types = array( 'bnfund_event', 'bnfund_campaign' );
 	if ( $include_lists ) {
-		$pfund_post_types[] = 'pfund_cause_list';
-		$pfund_post_types[] = 'pfund_campaign_list';
+		$bnfund_post_types[] = 'bnfund_event_list';
+		$bnfund_post_types[] = 'bnfund_campaign_list';
 	}
-	if( $post_to_check && $post_to_check->ID != null && in_array( $post_to_check->post_type, $pfund_post_types ) ) {
+	if( $post_to_check && $post_to_check->ID != null && in_array( $post_to_check->post_type, $bnfund_post_types ) ) {
 		return true;
 	} else {
 		return false;
@@ -223,26 +223,26 @@ function pfund_is_pfund_post( $post_to_check = false, $include_lists = false ) {
  *	 wp_error -- If the error_code is wp_error, the WP_Error object returned.
  *	 error_msg -- Text message describing error encountered.
  */
-function pfund_process_authorize_net() {
+function bnfund_process_authorize_net() {
 	$return_array = array( 'success' => false );
 	if ( ! (int)$_POST['cc_num'] || ! (int)$_POST['cc_amount'] || ! $_POST['cc_email'] || ! $_POST['cc_first_name']
 		 || ! $_POST['cc_last_name'] || ! $_POST['cc_address'] || ! $_POST['cc_city'] || ! $_POST['cc_zip']) {
 		if ( ! (int)$_POST['cc_num']) {
-			$return_array['error_msg'] = __( 'Error: Please enter a valid Credit Card number.', 'pfund' );
+			$return_array['error_msg'] = __( 'Error: Please enter a valid Credit Card number.', 'bnfund' );
 		} elseif ( ! (int)$_POST['cc_amount']) {
-			$return_array['error_msg'] = __( 'Error: Please enter a donation amount.', 'pfund' );
+			$return_array['error_msg'] = __( 'Error: Please enter a donation amount.', 'bnfund' );
 		} elseif ( ! $_POST['cc_email']) {
-			$return_array['error_msg'] = __( 'Error: Please enter a valid email address.', 'pfund' );
+			$return_array['error_msg'] = __( 'Error: Please enter a valid email address.', 'bnfund' );
 		} elseif ( ! $_POST['cc_first_name']) {
-			$return_array['error_msg'] = __( 'Error: Please enter your first name.', 'pfund' );
+			$return_array['error_msg'] = __( 'Error: Please enter your first name.', 'bnfund' );
 		} elseif ( ! $_POST['cc_last_name']) {
-			$return_array['error_msg'] = __( 'Error: Please enter your last name.', 'pfund' );
+			$return_array['error_msg'] = __( 'Error: Please enter your last name.', 'bnfund' );
 		} elseif ( ! $_POST['cc_address']) {
-			$return_array['error_msg'] = __( 'Error: Please enter your address.', 'pfund' );
+			$return_array['error_msg'] = __( 'Error: Please enter your address.', 'bnfund' );
 		} elseif ( ! $_POST['cc_city']) {
-			$return_array['error_msg'] = __( 'Error: Please enter your city.', 'pfund' );
+			$return_array['error_msg'] = __( 'Error: Please enter your city.', 'bnfund' );
 		} elseif ( ! $_POST['cc_zip']) {
-			$return_array['error_msg'] = __( 'Error: Please enter your zip code.', 'pfund' );
+			$return_array['error_msg'] = __( 'Error: Please enter your zip code.', 'bnfund' );
 		}
 		return $return_array;
 	}
@@ -251,9 +251,9 @@ function pfund_process_authorize_net() {
 	require('AuthnetAIM.class.php');
 	 
 	try {
-		$pfund_options = get_option('pfund_options');
+		$bnfund_options = get_option('bnfund_options');
 	    $email   = $_POST['cc_email'];
-	    $product = ($pfund_options['authorize_net_product_name'] !='') ? $pfund_options['authorize_net_product_name'] : 'Donation';
+	    $product = ($bnfund_options['authorize_net_product_name'] !='') ? $bnfund_options['authorize_net_product_name'] : 'Donation';
 	    $firstname = $_POST['cc_first_name'];
 	    $lastname  = $_POST['cc_last_name'];
 	    $address   = $_POST['cc_address'];
@@ -268,10 +268,10 @@ function pfund_process_authorize_net() {
 	    $invoice    = substr(time(), 0, 6);	    
 	    
 	    
-	    $api_login = $pfund_options['authorize_net_api_login_id'];
-	    $transaction_key = $pfund_options['authorize_net_transaction_key']; 
+	    $api_login = $bnfund_options['authorize_net_api_login_id'];
+	    $transaction_key = $bnfund_options['authorize_net_transaction_key']; 
 	 
-	    $payment = new AuthnetAIM( $api_login, $transaction_key, ( $pfund_options['authorize_net_test_mode']==1 ) ? true : false );
+	    $payment = new AuthnetAIM( $api_login, $transaction_key, ( $bnfund_options['authorize_net_test_mode']==1 ) ? true : false );
 
 	    $payment->setTransaction($creditcard, $expiration, $total, $cvv, $invoice);
 	    $payment->setParameter("x_duplicate_window", 180);
@@ -306,7 +306,7 @@ function pfund_process_authorize_net() {
 	        // Get reason for the decline from the bank. This always says,
 	        // "This credit card has been declined". Not very useful.
 	        $reason = $payment->getResponseText();	 
-	        $return_array['error_msg'] = __( 'This credit card has been declined.  Please use another form of payment.', 'pfund' );
+	        $return_array['error_msg'] = __( 'This credit card has been declined.  Please use another form of payment.', 'bnfund' );
 	    } else if ($payment->isError()) {	 
 	        // Capture a detailed error message. No need to refer to the manual
 	        // with this one as it tells you everything the manual does.
@@ -319,14 +319,14 @@ function pfund_process_authorize_net() {
 	        } else if ($payment->isTempError()) {
 	            // Some kind of temporary error on Authorize.Net's end. 
 	            // It should work properly "soon".
-	            $return_array['error_msg'] .= __( '  Please try your donation again.', 'pfund' );
+	            $return_array['error_msg'] .= __( '  Please try your donation again.', 'bnfund' );
 	        } else {
 	            // All other errors.
 	        }
 	 
 	    }
 	} catch (AuthnetAIMException $e) {
-	    $return_array['error_msg'] = sprintf( __( 'There was an error processing the transaction. Here is the error message: %s', 'pfund' ),  $e->__toString() );
+	    $return_array['error_msg'] = sprintf( __( 'There was an error processing the transaction. Here is the error message: %s', 'bnfund' ),  $e->__toString() );
 	}
 	return $return_array;
 }
@@ -340,27 +340,27 @@ function pfund_process_authorize_net() {
  * @param string $default_goal default goal for campaign.  Defaults to empty.
  * @return string The HTML for the input fields.
  */
-function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true, $default_goal = '' ) {
+function bnfund_render_fields( $postid, $campaign_title, $editing_campaign = true, $default_goal = '' ) {
 	global $current_user, $post;
-	$options = get_option( 'pfund_options' );
+	$options = get_option( 'bnfund_options' );
 	$inputfields = array();
 	$matches = array();
-	$result = preg_match_all( '/'.get_shortcode_regex().'/s', pfund_handle_content( $post->post_content ), $matches );
+	$result = preg_match_all( '/'.get_shortcode_regex().'/s', bnfund_handle_content( $post->post_content ), $matches );
 	$tags = $matches[2];
 	$attrs = $matches[3];
 	if ( is_admin() ) {
 		$render_type = 'admin';
 		if ( isset( $options['fields'] ) ) {
 			foreach ( $options['fields'] as $field_id => $field ) {
-				$field_value = get_post_meta( $postid, '_pfund_'.$field_id, true );
-				$inputfields['pfund-'.$field_id] = array(
+				$field_value = get_post_meta( $postid, '_bnfund_'.$field_id, true );
+				$inputfields['bnfund-'.$field_id] = array(
 					'field' => $field,
 					'value' => $field_value
 				);
 			}
-			$content_idx = array_search('pfund-'.$field_id, $tags);
+			$content_idx = array_search('bnfund-'.$field_id, $tags);
 			if ( $content_idx !== false ){
-				$inputfields['pfund-'.$field_id]['attrs'] = $attrs[$content_idx];
+				$inputfields['bnfund-'.$field_id]['attrs'] = $attrs[$content_idx];
 			}
 		}
 		$content = '';
@@ -369,11 +369,11 @@ function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true
 		get_currentuserinfo();
 		$inputfields = array();
 		foreach( $tags as $idx => $tag ) {
-			if ( $tag == 'pfund-days-left' ) {
-				$tag = 'pfund-end-date';
+			if ( $tag == 'bnfund-days-left' ) {
+				$tag = 'bnfund-end-date';
 			}
 			$field_id = substr( $tag, 6 );			
-			$field_value = get_post_meta( $postid, '_pfund_'.$field_id, true );
+			$field_value = get_post_meta( $postid, '_bnfund_'.$field_id, true );
 			if ( isset( $options['fields'][$field_id] ) ) {
 				$inputfields[$tag] = array(
 					'field' => $options['fields'][$field_id],
@@ -382,56 +382,56 @@ function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true
 				);
 			}
 		}
-		$content = '<ul class="pfund-list">';
+		$content = '<ul class="bnfund-list">';
 	}
 
-	if ( ! isset( $inputfields['pfund-camp-title'] ) ) {
-		$inputfields['pfund-camp-title'] = array(
+	if ( ! isset( $inputfields['bnfund-camp-title'] ) ) {
+		$inputfields['bnfund-camp-title'] = array(
 			'field' => $options['fields']['camp-title'],
 			'value' => $campaign_title
 		);
 	}
 
-	if ( ! isset( $inputfields['pfund-camp-location'] ) ) {
-		$inputfields['pfund-camp-location'] = array(
+	if ( ! isset( $inputfields['bnfund-camp-location'] ) ) {
+		$inputfields['bnfund-camp-location'] = array(
 			'field' => $options['fields']['camp-location']
 		);
 	}
 
-	if ( ! isset( $inputfields['pfund-gift-goal'] ) ) {
-		$current_goal = get_post_meta( $postid, '_pfund_gift-goal', true );
-		$inputfields['pfund-gift-goal'] = array(
+	if ( ! isset( $inputfields['bnfund-gift-goal'] ) ) {
+		$current_goal = get_post_meta( $postid, '_bnfund_gift-goal', true );
+		$inputfields['bnfund-gift-goal'] = array(
 			'field' => $options['fields']['gift-goal'],
 			'value' => $current_goal
 		);
 	}
-	if ( empty( $inputfields['pfund-gift-goal']['value'] ) ) {
-		$inputfields['pfund-gift-goal']['value'] = $default_goal;
+	if ( empty( $inputfields['bnfund-gift-goal']['value'] ) ) {
+		$inputfields['bnfund-gift-goal']['value'] = $default_goal;
 	}
 
-	if ( ! isset( $inputfields['pfund-gift-tally'] ) ) {
-		$current_tally = get_post_meta( $postid, '_pfund_gift-tally', true );
-		$inputfields['pfund-gift-tally'] = array(
+	if ( ! isset( $inputfields['bnfund-gift-tally'] ) ) {
+		$current_tally = get_post_meta( $postid, '_bnfund_gift-tally', true );
+		$inputfields['bnfund-gift-tally'] = array(
 			'field' => $options['fields']['gift-tally'],
 			'value' => $current_tally
 		);
 	}
 
-	uasort( $inputfields, '_pfund_sort_fields' );
+	uasort( $inputfields, '_bnfund_sort_fields' );
 	$hidden_inputs = '';
 	$field_idx = 0;
 	foreach( $inputfields as $tag => $field_data ) {
 		$field = $field_data['field'];
-		$value = pfund_get_value( $field_data, 'value' );
+		$value = bnfund_get_value( $field_data, 'value' );
 
 		$field_options = array(			
 			'name' => $tag,
-			'desc' => pfund_get_value( $field, 'desc' ),
-			'label' => pfund_get_value( $field, 'label' ),
+			'desc' => bnfund_get_value( $field, 'desc' ),
+			'label' => bnfund_get_value( $field, 'label' ),
 			'value' => $value,
 			'render_type' => $render_type,
 			'field_count' => $field_idx,
-			'required' => pfund_get_value( $field, 'required', false )
+			'required' => bnfund_get_value( $field, 'required', false )
 		);
 		if ( isset( $field_data['attrs'] ) ) {
 			$field_options['attrs']= shortcode_parse_atts( $field_data['attrs'] );
@@ -440,7 +440,7 @@ function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true
 			case 'camp_title':
 				if ( ! is_admin() ) {
 					$field_options['value'] = $campaign_title;
-					$content .= _pfund_render_text_field( $field_options );					
+					$content .= _bnfund_render_text_field( $field_options );					
 					$field_idx++;
 				}
 				break;
@@ -452,17 +452,17 @@ function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true
 					} else {
 						$post_name = '';
 					}
-					$field_options['custom_validation'] = 'ajax[pfundSlug]';
+					$field_options['custom_validation'] = 'ajax[bnfundSlug]';
 					$field_options['value'] = $post_name;
 					$field_options['pre_input'] = trailingslashit( get_option( 'siteurl' ) ).trailingslashit( $options['campaign_slug'] );					
-					$content .= _pfund_render_text_field( $field_options );
+					$content .= _bnfund_render_text_field( $field_options );
 					$field_idx++;
 				}
 				break;
 			case 'fixed':
 			case 'gift_tally':
 				if ( is_admin() ) {
-					$content .= _pfund_render_text_field( $field_options );
+					$content .= _bnfund_render_text_field( $field_options );
 				} else if ( $field['type'] == 'fixed' ) {
 					$attr = shortcode_parse_atts( $field_data['attrs'] );
 					$hidden_inputs .= '	<input type="hidden" name="'.$tag.'" value="'.$attr["value"].'"/>';
@@ -470,46 +470,46 @@ function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true
 				break;
 			case 'end_date':
 			case 'date':
-				$field_options['class'] = 'pfund-date';
-				$field_options['value'] = pfund_format_date( 
+				$field_options['class'] = 'bnfund-date';
+				$field_options['value'] = bnfund_format_date( 
 						$field_options['value'],  
 						$options['date_format']
 				);
-				$content .= _pfund_render_text_field( $field_options );
+				$content .= _bnfund_render_text_field( $field_options );
 				$field_idx++;
 				break;
 			case 'giver_tally':
 				if ( is_admin() ) {
-					$content .= _pfund_render_text_field( $field_options );
+					$content .= _bnfund_render_text_field( $field_options );
 					$field_idx++;					
 				}
 				break;
 			case 'user_goal':
 				$field_options['custom_validation'] = 'custom[onlyNumber]';
-				$content .= _pfund_render_text_field( $field_options );
+				$content .= _bnfund_render_text_field( $field_options );
 				$field_idx++;
 				break;
 			case 'text':
-				$content .= _pfund_render_text_field( $field_options );
+				$content .= _bnfund_render_text_field( $field_options );
 				$field_idx++;
 				break;
 			case 'textarea':
-                $field_options['class'] = 'pfund-textarea';
-                $field_options = _pfund_add_validation_class($field_options);
+                $field_options['class'] = 'bnfund-textarea';
+                $field_options = _bnfund_add_validation_class($field_options);
 				$field_content = '<textarea class="'.$field_options['class'].'" id="'.$tag.'" name="'.$tag.'" rows="10" cols="50" type="textarea">'.$value.'</textarea>';
-				$content .= pfund_render_field_list_item( $field_content, $field_options);
+				$content .= bnfund_render_field_list_item( $field_content, $field_options);
 				$field_idx++;
 				break;
 			case 'image':
                 if ( ( isset( $field_options['required'] ) && $field_options['required'] ) ) {                
                     $field_options['custom_validation'] = 'funcCall[requiredFile]';
                 }
-				$content .= _pfund_render_image_field( $field_options );
+				$content .= _bnfund_render_image_field( $field_options );
 				$field_idx++;
 				break;
 			case 'select':
-				$field_content = pfund_render_select_field( $field['data'], $tag, $value );
-				$content .= pfund_render_field_list_item( $field_content, $field_options );
+				$field_content = bnfund_render_select_field( $field['data'], $tag, $value );
+				$content .= bnfund_render_field_list_item( $field_content, $field_options );
 				$field_idx++;
 				break;
 			case 'user_email':
@@ -518,7 +518,7 @@ function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true
 					$field_options['value'] = $value;
 				}
 				$field_options['custom_validation'] = 'custom[email]';
-				$content .= _pfund_render_text_field( $field_options );
+				$content .= _bnfund_render_text_field( $field_options );
 				$field_idx++;
 				break;
 			case 'user_displayname':
@@ -526,11 +526,11 @@ function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true
 					$value = $current_user->display_name;
 					$field_options['value'] = $value;
 				}				
-				$content .= _pfund_render_text_field( $field_options );
+				$content .= _bnfund_render_text_field( $field_options );
 				$field_idx++;
 				break;
 			default:
-				$content .= apply_filters( 'pfund_'.$field['type'].'_input', $field_options );
+				$content .= apply_filters( 'bnfund_'.$field['type'].'_input', $field_options );
 				$field_idx++;
 		}
 	}
@@ -550,7 +550,7 @@ function pfund_render_fields( $postid, $campaign_title, $editing_campaign = true
  * selected.
  * @return string The HTML for the dropdown.
  */
-function pfund_render_select_field( $values, $name = '', $currentValue = '' ) {
+function bnfund_render_select_field( $values, $name = '', $currentValue = '' ) {
 	$values = preg_split( "/[\n]+/", $values );
 	$content = '<select name="'.$name.'" value="'.$name.'>';
 	foreach( $values as $value ) {
@@ -565,31 +565,31 @@ function pfund_render_select_field( $values, $name = '', $currentValue = '' ) {
  * @param string $campid The id of the campaign to save the personal fundraising
  * fields to.
  */
-function pfund_save_campaign_fields( $campid ) {
-	$options = get_option( 'pfund_options' );	
+function bnfund_save_campaign_fields( $campid ) {
+	$options = get_option( 'bnfund_options' );	
 	if ( isset( $options['fields'] ) ) {
 		$fieldname = '';
 		foreach ( $options['fields'] as $field_id => $field ) {
-			$fieldname = 'pfund-'.$field_id;			
+			$fieldname = 'bnfund-'.$field_id;			
 			switch( $field['type'] ) {
 				case 'end_date':
 				case 'date':
 					if ( isset( $_REQUEST[$fieldname] ) ) {
-						$date_format = pfund_get_value( $options, 'date_format', 'm/d/y' );
+						$date_format = bnfund_get_value( $options, 'date_format', 'm/d/y' );
 						if ( isset( $_REQUEST[$fieldname] ) && empty( $_REQUEST[$fieldname] ) ) {
 							$date_to_save = $_REQUEST[$fieldname];
 						} else {
-							$date_to_save = pfund_date_to_iso8601( $_REQUEST[$fieldname] , $date_format );
+							$date_to_save = bnfund_date_to_iso8601( $_REQUEST[$fieldname] , $date_format );
 						}
-						update_post_meta( $campid, "_pfund_".$field_id, $date_to_save );
+						update_post_meta( $campid, "_bnfund_".$field_id, $date_to_save );
 					}
 				case 'image':
-					 _pfund_attach_uploaded_image( $fieldname, $campid, "_pfund_".$field_id );
+					 _bnfund_attach_uploaded_image( $fieldname, $campid, "_bnfund_".$field_id );
 					break;
 				case 'user_goal':
 				case 'gift_tally':
 					if ( isset( $_REQUEST[$fieldname] ) ) {
-						update_post_meta( $campid, "_pfund_".$field_id, absint( $_REQUEST[$fieldname] ) );
+						update_post_meta( $campid, "_bnfund_".$field_id, absint( $_REQUEST[$fieldname] ) );
 					}
 					break;
 				default:
@@ -599,7 +599,7 @@ function pfund_save_campaign_fields( $campid ) {
 						} else {
 							$value_to_save = strip_tags( $_REQUEST[$fieldname] );
 						}
-						update_post_meta( $campid, "_pfund_".$field_id, $value_to_save );
+						update_post_meta( $campid, "_bnfund_".$field_id, $value_to_save );
 					}
 					break;
 			}
@@ -612,14 +612,14 @@ function pfund_save_campaign_fields( $campid ) {
  * @param string $email the email address to send to.
  * @param array $merge_vars An array of the email merge variables.
  * @param string $subject the subject for the email.
- * @param string $config the prefix name of the pfund options containing the mandrill
+ * @param string $config the prefix name of the bnfund options containing the mandrill
  * properties for the text version of the email, the html version and the optional template.
- * @param string $html the name of the pfund option containing the html version 
+ * @param string $html the name of the bnfund option containing the html version 
  * of the email.  
  * @return boolean flag indicating if send was successful.
  */
-function pfund_send_mandrill_email($email, $merge_vars, $subject, $config) {
-	$options = get_option( 'pfund_options' );
+function bnfund_send_mandrill_email($email, $merge_vars, $subject, $config) {
+	$options = get_option( 'bnfund_options' );
     $api_key = $options['mandrill_api_key'];    
     $from_email = apply_filters( 'wp_mail_from', get_option( 'admin_email' ) );
 	$from_name = apply_filters( 'wp_mail_from_name',  '');
@@ -702,7 +702,7 @@ function pfund_send_mandrill_email($email, $merge_vars, $subject, $config) {
  * @param string $metaname The name of the metadata field to store the
  * attachment in.
  */
-function _pfund_attach_uploaded_image( $fieldname, $postid, $metaname ) {
+function _bnfund_attach_uploaded_image( $fieldname, $postid, $metaname ) {
 	if( isset( $_FILES[$fieldname] ) && is_uploaded_file( $_FILES[$fieldname]['tmp_name'] ) ) {
 		$data = media_handle_upload( $fieldname, $postid, array( 'post_status' => 'private' ) );
 		if( is_wp_error( $data ) ) {
@@ -720,13 +720,13 @@ function _pfund_attach_uploaded_image( $fieldname, $postid, $metaname ) {
  * @param string $format the format to return the date in.
  * @return string the formatted date.
  */
-function pfund_format_date( $date, $format ) {
+function bnfund_format_date( $date, $format ) {
 	if ( empty($date) ) {
 		return $date;
 	}
 	//Date is stored in old format of m/d/y
 	if ( strlen( $date ) == 8 ) {
-		$date = pfund_date_to_iso8601( $date, 'm/d/y' );
+		$date = bnfund_date_to_iso8601( $date, 'm/d/y' );
 	}
 	return gmdate( $format, strtotime( $date ) );
 }
@@ -743,12 +743,12 @@ function pfund_format_date( $date, $format ) {
  * @return <mixed> a WP_User object containing the contact information for
  * the specified campaign.
  */
-function pfund_get_contact_info( $post, $options = array() ) {
+function bnfund_get_contact_info( $post, $options = array() ) {
 	$metavalues = get_post_custom( $post->ID );
 	$contact_email = '';
 	$contact_name = '';
 	foreach( $metavalues as $metakey => $metavalue ) {
-		if ( strpos( $metakey, "_pfund_" ) === 0 ) {
+		if ( strpos( $metakey, "_bnfund_" ) === 0 ) {
 			$field_id = substr( $metakey , 7);
 			if ( isset($options['fields'][$field_id]) ) {
 				$field_info = $options['fields'][$field_id];
@@ -781,44 +781,44 @@ function pfund_get_contact_info( $post, $options = array() ) {
  * Convenience function to count number of published fundraisers
  * @return int number of published fundraising campaigns.
  */
-function pfund_get_total_published_campaigns() {
-    $count_posts = wp_count_posts( 'pfund_campaign' );
+function bnfund_get_total_published_campaigns() {
+    $count_posts = wp_count_posts( 'bnfund_campaign' );
     $published_posts = $count_posts->publish;
     return number_format( $published_posts, 0, ".", "," );
 }
 
-function pfund_get_validation_js() {
+function bnfund_get_validation_js() {
 	$validateSlug = array(
-		'file' => PFUND_URL.'validate-slug.php',
-		'alertTextLoad' => __( 'Please wait while we validate this location', 'pfund' ),
-		'alertText' => __( '* This location is already taken', 'pfund' )
+		'file' => bnfund_URL.'validate-slug.php',
+		'alertTextLoad' => __( 'Please wait while we validate this location', 'bnfund' ),
+		'alertText' => __( '* This location is already taken', 'bnfund' )
 	);
     $required_validation = array(
         'regex' => 'none',
-        'alertText' =>  __( '* This field is required', 'pfund' ),
-        'alertTextCheckboxMultiple' =>  __( '* Please select an option', 'pfund' ),
-        'alertTextCheckboxe' =>  __( '* This checkbox is required', 'pfund' )
+        'alertText' =>  __( '* This field is required', 'bnfund' ),
+        'alertTextCheckboxMultiple' =>  __( '* Please select an option', 'bnfund' ),
+        'alertTextCheckboxe' =>  __( '* This checkbox is required', 'bnfund' )
     );
     $required_file_validation = array(
-        'nname' =>  'pfund_validate_required_file',
-        'alertText' =>  __( '* This field is required', 'pfund' )
+        'nname' =>  'bnfund_validate_required_file',
+        'alertText' =>  __( '* This field is required', 'bnfund' )
     );    
     $length_validation = array(
         'regex' => 'none',
-        'alertText' =>  __( '*Between ', 'pfund' ),
-        'alertText2' => __( ' and ', 'pfund' ),
-        'alertText3' => __( ' characters allowed', 'pfund' )
+        'alertText' =>  __( '*Between ', 'bnfund' ),
+        'alertText2' => __( ' and ', 'bnfund' ),
+        'alertText3' => __( ' characters allowed', 'bnfund' )
     );
     $email_validation = array(
         'regex' => '/^[a-zA-Z0-9_\.\-]+\@([a-zA-Z0-9\-]+\.)+[a-zA-Z0-9]{2,4}$/',
-        'alertText' =>  __( '* Invalid email address', 'pfund' )
+        'alertText' =>  __( '* Invalid email address', 'bnfund' )
     );
     $number_validation = array(
         'regex' => '/^[0-9\ ]+$/',
-        'alertText' =>  __( '* Numbers only', 'pfund' )
+        'alertText' =>  __( '* Numbers only', 'bnfund' )
     );
     return array(
-        'pfundSlug' => $validateSlug,
+        'bnfundSlug' => $validateSlug,
         'required' => $required_validation,
         'length' => $length_validation,
         'email' => $email_validation,
@@ -837,7 +837,7 @@ function pfund_get_validation_js() {
  * @return mixed The specified value from the array or the default if it doesn't
  * exist
  */
-function pfund_get_value( $array, $key, $default = '' ) {
+function bnfund_get_value( $array, $key, $default = '' ) {
 	if ( isset( $array[$key] ) ) {
 		return $array[$key];
 	} else {
@@ -851,18 +851,18 @@ function pfund_get_value( $array, $key, $default = '' ) {
  * @param array $value_array Array of fields to create user.
  * @return int|WP_Error Either user's ID or error on failure.
  */
-function pfund_register_user($value_array=array()) {
+function bnfund_register_user($value_array=array()) {
     if (empty($value_array)) {
         $value_array = $_POST;
     }
-    $user_login = $value_array['pfund_user_login'];
-    $user_pass = $value_array['pfund_user_pass'];
+    $user_login = $value_array['bnfund_user_login'];
+    $user_pass = $value_array['bnfund_user_pass'];
     if (empty($user_pass)) {
         $user_pass = wp_generate_password();        
     }    
-    $user_email = $value_array['pfund_user_email'];
-    $first_name = $value_array['pfund_user_first_name'];
-    $last_name = $value_array['pfund_user_last_name'];
+    $user_email = $value_array['bnfund_user_email'];
+    $first_name = $value_array['bnfund_user_first_name'];
+    $last_name = $value_array['bnfund_user_last_name'];
 
     $errors = new WP_Error();
 
@@ -918,18 +918,18 @@ function pfund_register_user($value_array=array()) {
  * @param array $field_options named options for field.
  * @return string the rendered HTML.
  */
-function pfund_render_field_list_item( $field_contents, $field_options ) {
+function bnfund_render_field_list_item( $field_contents, $field_options ) {
 	$content = '<li>';
 	$content .= '	<label for="'.$field_options['name'].'">'.$field_options['label'];
 	if ( isset( $field_options['required'] ) && $field_options['required'] ) {
-		$content .= '<abbr title="'.esc_attr__( 'required', 'pfund' ).'">*</abbr>';
+		$content .= '<abbr title="'.esc_attr__( 'required', 'bnfund' ).'">*</abbr>';
 	}
 	$content .= '</label>';
 	$content .= $field_contents;
 	if ( isset( $field_options['render_type'] ) &&  
 			$field_options['render_type'] == 'user' &&
 			! empty( $field_options['desc'] ) ) {
-		$content .= '<div class="pfund-field-desc"><em><small>'.$field_options['desc'].'</small></em></div>';
+		$content .= '<div class="bnfund-field-desc"><em><small>'.$field_options['desc'].'</small></em></div>';
 	}
 	$content .= '</li>';
 	return $content;
@@ -940,7 +940,7 @@ function pfund_render_field_list_item( $field_contents, $field_options ) {
  * @param array $field_options named options for field.
  * @return array updated field options including validation class if needed.
  */
-function _pfund_add_validation_class($field_options) {
+function _bnfund_add_validation_class($field_options) {
 	if ( ( isset( $field_options['required'] ) && $field_options['required'] ) ||
 			isset( $field_options['custom_validation'] ) ) {
 		$field_options['class'] .= ' validate[';
@@ -966,13 +966,13 @@ function _pfund_add_validation_class($field_options) {
  *	--value link to current image.
  * @return string HTML markup for image file upload/display.
  */
-function _pfund_render_image_field( $field_options ) {
+function _bnfund_render_image_field( $field_options ) {
 	if ( ! empty ( $field_options['value'] ) ) {
-		$field_options['additional_content'] = '<img class="pfund-image" width="184" src="'.wp_get_attachment_url( $field_options['value'] ).'">';
+		$field_options['additional_content'] = '<img class="bnfund-image" width="184" src="'.wp_get_attachment_url( $field_options['value'] ).'">';
 	}
-	$field_options['class'] = 'pfund-image';
+	$field_options['class'] = 'bnfund-image';
 	$field_options['type'] = 'file';
-	return _pfund_render_text_field( $field_options );
+	return _bnfund_render_text_field( $field_options );
 	
 }
 
@@ -987,14 +987,14 @@ function _pfund_render_image_field( $field_options ) {
  *	--additional_content Additional HTML to display.
  * @return string The HTML of a text input field.
  */
-function _pfund_render_text_field( $field_options = '') {
+function _bnfund_render_text_field( $field_options = '') {
 	$defaults = array(
-		'class' => 'pfund-text',
+		'class' => 'bnfund-text',
 		'type' => 'text',
 		'value' => '',
 	);
 	$field_options = array_merge( $defaults, $field_options );
-    $field_options = _pfund_add_validation_class($field_options);
+    $field_options = _bnfund_add_validation_class($field_options);
 	$content = '';
 	if ( isset( $field_options['pre_input'] ) ) {
 		$content .= $field_options['pre_input'];
@@ -1003,7 +1003,7 @@ function _pfund_render_text_field( $field_options = '') {
 	$content .= '		type="'.$field_options['type'].'" name="'.$field_options['name'].'"';
 	if ( $field_options['type'] == 'file' ) {
         if ( ! empty( $field_options['value'] ) ) {
-            $content .= ' data-pfund-file-set="true"';
+            $content .= ' data-bnfund-file-set="true"';
         }
 	} else {
         $content .= ' value="'.esc_attr( $field_options['value'] ).'"';
@@ -1012,7 +1012,7 @@ function _pfund_render_text_field( $field_options = '') {
 	if ( isset( $field_options['additional_content'] ) ) {
 		$content .= $field_options['additional_content'];
 	}
-	return pfund_render_field_list_item( $content, $field_options );
+	return bnfund_render_field_list_item( $content, $field_options );
 }
 
 /**
@@ -1022,7 +1022,7 @@ function _pfund_render_text_field( $field_options = '') {
  * @return int indicating if fields are equal, greater than or less than one
  * another.
  */
-function _pfund_sort_fields( $field, $compare_field ) {
+function _bnfund_sort_fields( $field, $compare_field ) {
 	$field_order = $field['field']['sortorder'];
 	$compare_order = $compare_field['field']['sortorder'];
 
