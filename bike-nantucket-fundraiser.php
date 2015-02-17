@@ -9,7 +9,7 @@ Author URI: http://aucoeurdesign.com
 License: GPLv2
 */
 
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design ( http://aucoeurdesign.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -25,7 +25,7 @@ License: GPLv2
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define( 'bnfund_VERSION', '0.8.3' );
+define( 'bnfund_VERSION', '1.0' );
 define( 'bnfund_FOLDER', str_replace( basename( __FILE__), '', plugin_basename( __FILE__ ) ) );
 // Define the URL to the plugin folder
 

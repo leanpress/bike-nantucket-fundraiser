@@ -1,5 +1,5 @@
 <?php
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design ( http://aucoeurdesign.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -27,7 +27,7 @@
 	}
 	$returnArray = array( $_POST['validateId'], $_POST['validateError'] );
 	
-	$approved_slug = wp_unique_post_slug( $slug, $campaign_id, 'publish', 'pfund_campaign', 0 );
+	$approved_slug = wp_unique_post_slug( $slug, $campaign_id, 'publish', 'bnfund_campaign', 0 );
 	if ($approved_slug == $slug) {
 		$returnArray[] = "true";
 	} else {

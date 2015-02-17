@@ -1,16 +1,16 @@
-=== Personal Fundraiser ===
-Contributors: johnkleinschmidt
-Donate link: http://cure.org/donate
+=== Bike Nantucket Fundraiser ===
+Contributors: Au Coeur Design
+Contributor link: http://aucoeurdesign.com
 Tags: fundraising, paypal
 Requires at least: 3.6
-Tested up to: 3.8.1
+Tested up to: 4.1
 Stable tag: trunk
 
-Expand your fundraising base by getting your donors and fans involved in the fundraising process.
+Expand your fundraising base by getting event participants involved in the fundraising process.
 
 == Description ==
 
-Expand your fundraising base by getting your donors and fans involved in the fundraising process.
+Expand your fundraising base by getting your event participants involved in the fundraising process.
 
 This plugin provides organizations the ability to allow their fans and constituents to create their own custom online fundraisers using PayPal donations and other payment methods.
 
@@ -20,64 +20,63 @@ All donations for this plugin go to provide life-changing surgery for children i
 
 1. Upload the plugin to your plugins directory and activate.
 1. Make sure your site is set to use Pretty Permalinks.  For more details see: <a href="http://codex.wordpress.org/Using_Permalinks>Using_Permalinks</a>
-1. Check the settings by clicking on the Personal Fundraiser admin menu item under the Settings menu.
-1. Define the Personal Fundraiser Fields that users will fill out when creating a personal fundraiser campaign.
-1. Edit/View the sample cause **Help Raise Money For My Cause** to see a sample cause.
-1. Create a new Cause from the Causes admin menu using the shortcode **[pfund-edit]** as well as the shortcode from the Personal Fundraiser settings.
-1. Navigate to /`<CAUSE SLUG>` to see the list of available causes to create campaigns from.
+1. Check the settings by clicking on the Bike Nantucket Fundraiser admin menu item under the Settings menu.
+1. Define the Bike Nantucket Fundraiser Fields that users will fill out when creating a Bike Nantucket Fundraiser campaign.
+1. Edit/View the sample event **Help Raise Money For My event** to see a sample event.
+1. Create a new event from the events admin menu using the shortcode **[bnfund-edit]** as well as the shortcode from the Bike Nantucket Fundraiser settings.
+1. Navigate to /`<event SLUG>` to see the list of available events to create campaigns from.
 
 == Frequently Asked Questions ==
 
 = Why should I use this plugin? =
 
-charity: water has raised over $28M using personal fundraising campaigns.
 This plugin adds the capability of creating personal fundraising campaigns on your WordPress site. 
 
 = How do I get started? = 
-1. Once you have followed the installation instructions, navigate to /causes/sample-cause/ to see a sample cause.
-1. If you do not see anything at /causes/sample-cause/, check your Personal Fundraising settings in the admin dashboard.  Check the Cause Slug value.  If it is something other than causes, the sample cause is located at /SLUG NAME/sample-cause.
-1. If you still cannot locate the sample cause, check your permalink settings to make sure you are using Pretty Permalinks.  For more details see: <a href="http://codex.wordpress.org/Using_Permalinks">Using_Permalinks</a>.
-1. Once you can navigate to the sample cause, fill out the fields in the popup.  This will create a sample fundraising campaign.
-1. Go to the admin dashboard and click on the Causes and Campaigns menu items to look at the sample cause and the campaign you just created.
+1. Once you have followed the installation instructions, navigate to /events/sample-event/ to see a sample event.
+1. If you do not see anything at /events/sample-event/, check your Personal Fundraising settings in the admin dashboard.  Check the event Slug value.  If it is something other than events, the sample event is located at /SLUG NAME/sample-event.
+1. If you still cannot locate the sample event, check your permalink settings to make sure you are using Pretty Permalinks.  For more details see: <a href="http://codex.wordpress.org/Using_Permalinks">Using_Permalinks</a>.
+1. Once you can navigate to the sample event, fill out the fields in the popup.  This will create a sample fundraising campaign.
+1. Go to the admin dashboard and click on the events and Campaigns menu items to look at the sample event and the campaign you just created.
 
-= What is a Cause? =
+= What is a event? =
 
-A Cause is a template used to create fundraising campaigns. 
+A event is a template used to create fundraising campaigns. 
 As an administrator you define the look and feel of the campaigns that your users create.   
 
-When creating or editing a cause, here are several things to keep in mind:
+When creating or editing a event, here are several things to keep in mind:
 
-1. Every cause needs to have the shortcode **[pfund-edit]** in the content.  This enables the ability for users to create and/or edit campaigns.
-1. Every cause should also have the shortcode **[pfund-donate]** in the content.  This enables the ability for donations to be collected on campaigns created from the cause.
-1. Besides the content specified in the WYSIWYG editor, each cause has a description and image field.  These fields are displayed on the cause list page.
-1. If you update the look and feel of a cause, all of the campaigns created from that cause will also have an updated look and feel.
+1. Every event needs to have the shortcode **[bnfund-edit]** in the content.  This enables the ability for users to create and/or edit campaigns.
+1. Every event should also have the shortcode **[bnfund-donate]** in the content.  This enables the ability for donations to be collected on campaigns created from the event.
+1. Besides the content specified in the WYSIWYG editor, each event has a description and image field.  These fields are displayed on the event list page.
+1. If you update the look and feel of a event, all of the campaigns created from that event will also have an updated look and feel.
 
 = What shortcodes does this plugin provide? =
 
-Each of the fields defined in the Personal Fundraiser Fields section of the Personal Fundraiser settings has a corresponding shortcode.  In addition, the plugin provides the following shortcodes:
+Each of the fields defined in the Bike Nantucket Fundraiser Fields section of the Bike Nantucket Fundraiser settings has a corresponding shortcode.  In addition, the plugin provides the following shortcodes:
 
-* **[pfund-campaign-list]** Display the list of campaigns.
-* **[pfund-campaign-permalink]** Display the permalink(URL) for the campaign.
-* **[pfund-cause-list]** Display the list of causes.
-* **[pfund-comments]** Display the comments/donations for the campaign.
-* **[pfund-donate]** PayPal donate button.  This shortcode is required in order to accept donations for the campaigns.
-* **[pfund-edit]** Required shortcode to display edit button.
-* **[pfund-camp-title]** The title of the campaign.
-* **[pfund-days-left]** The number of days left in the campaign (if an end date is specified for the campaign).
-* **[pfund-gift-goal]** The amount that the user hopes to raise for their campaign.
-* **[pfund-gift-tally]** The total amount raised.
-* **[pfund-giver-list]**  Displays a list of supporters for the current campaign.  The supported attributes are:
+* **[bnfund-campaign-list]** Display the list of campaigns.
+* **[bnfund-campaign-permalink]** Display the permalink(URL) for the campaign.
+* **[bnfund-event-list]** Display the list of events.
+* **[bnfund-comments]** Display the comments/donations for the campaign.
+* **[bnfund-donate]** PayPal donate button.  This shortcode is required in order to accept donations for the campaigns.
+* **[bnfund-edit]** Required shortcode to display edit button.
+* **[bnfund-camp-title]** The title of the campaign.
+* **[bnfund-days-left]** The number of days left in the campaign (if an end date is specified for the campaign).
+* **[bnfund-gift-goal]** The amount that the user hopes to raise for their campaign.
+* **[bnfund-gift-tally]** The total amount raised.
+* **[bnfund-giver-list]**  Displays a list of supporters for the current campaign.  The supported attributes are:
      * **max_givers**  Maximum number of supporters to display.  If this attribute is specified and the number of supporters exceeds this value, a set of randomized supporters will be returned.
      * **row_max**  Number of supporters to display in one row.  This attribute is simply used to add a css class to the last supporter in a row.  The class is specified by the row_end_class attribute.
      * **row_end_class**  Class to apply to last support in a row.  This class is applied to the last supporter in a row.
-* **[pfund-giver-tally]** The total number of unique donors to the campaign.
-* **[pfund-progress-bar]** Displays a progress bar for the campaign.  This progress bar displays how much of the campaign goal has been achieved.
-* **[pfund-total-campaigns]** Displays the total number of campaigns published.
-* **[pfund-user-avatar]** The avatar of the user who created the campaign.  You can specify the size of the avatar by passing a "size" attribute (e.g. [pfund-user-avatar size="50"].
+* **[bnfund-giver-tally]** The total number of unique donors to the campaign.
+* **[bnfund-progress-bar]** Displays a progress bar for the campaign.  This progress bar displays how much of the campaign goal has been achieved.
+* **[bnfund-total-campaigns]** Displays the total number of campaigns published.
+* **[bnfund-user-avatar]** The avatar of the user who created the campaign.  You can specify the size of the avatar by passing a "size" attribute (e.g. [bnfund-user-avatar size="50"].
 
 = What do the various settings do? =
-* **Campaign Slug** URL prefix for campaigns.  Also the location of the page containing the list of causes.
-* **Cause Slug** URL prefix for causes.  Also the location of the page containing the list of campaigns.
+* **Campaign Slug** URL prefix for campaigns.  Also the location of the page containing the list of events.
+* **event Slug** URL prefix for events.  Also the location of the page containing the list of campaigns.
 * **Currency Symbol** Currency symbol to display next to monetary amounts such as amount of donations received.
 * **Date Format** Date format to use to display dates.  The date formats correspond to the ones defined at: <a href="http://codex.wordpress.org/Formatting_Date_and_Time">http://codex.wordpress.org/Formatting_Date_and_Time</a>.  This plugin only supports the following subset of formatting characters:
      * **d** Day of the month.
@@ -87,7 +86,7 @@ Each of the fields defined in the Personal Fundraiser Fields section of the Pers
      * **Y** Full numeric year, 4 digits
      * **y** Numeric year: 2 digits
 * **Login Required To Create**  If checked, users must be logged in before they can create campaigns.  If it is not checked, users may create campaigns anonymously, but those campaigns stay in draft status until the user logs in.  Once the user logs in the campaign is assigned to that user.
-* **Allow Users To Register**  If users are not logged in, allow them to register using the custom registration the personal fundraiser plugin provides.
+* **Allow Users To Register**  If users are not logged in, allow them to register using the custom registration the Bike Nantucket Fundraiser plugin provides.
 * **Campaigns Require Approval**  If checked, campaigns for logged in users are saved as Pending Review until an admininstrator can approve them.  Campaigns pending review are only visible to the creator of the campaign as well as admins.  If this checkbox is not checked, campaigns will be publicly visible as soon as a logged in user saves them.
 * **User Roles that can submit campaigns** Determines what user roles can create campaigns.  This setting only affects anonymous campaigns after a user logs in.  If a campaign is created anonymously, but the logged in user doesn't have rights to submit a campaign, the campaign will stay in a draft status indefintely.
 * **PayPal Options** See below
@@ -117,7 +116,7 @@ Each of the fields defined in the Personal Fundraiser Fields section of the Pers
     * **GOAL_AMT** The goal that was reached.
 * **Goal Reached Text Email** The text version of the Goal Reached Email.
 * **Goal Reached Email Template (Optional)**  If you would like to use a Mandrill template for the Goal Reached Email, enter in the name of the template here.
-* **Personal Fundraiser Fields** Defines the fields that are available for use for personal fundraisers.  Each field has the following settings:
+* **Bike Nantucket Fundraiser Fields** Defines the fields that are available for use for Bike Nantucket Fundraisers.  Each field has the following settings:
     * **Label** The text to display to identify this field on the campaign creation/edit screen.
     * **Description** A longer text description of the field that will be displayed on the campaign creation/edit screen.
     * **Type** Defines the type of field.  The following types are available:
@@ -146,7 +145,7 @@ Yes, you can!  In the admin dashboard, when you edit a campaign you will see a l
 
 = How do I use PayPal? =
  
-Using PayPal requires a Premier or Business PayPal account.  In order to work properly with the Personal Fundraiser plugin, there are several settings that must be set on your PayPal account.  Also there two fields on the Personal Fundraising settings screen that must be set.  These values can be obtained by logging into PayPal:
+Using PayPal requires a Premier or Business PayPal account.  In order to work properly with the Bike Nantucket Fundraiser plugin, there are several settings that must be set on your PayPal account.  Also there two fields on the Personal Fundraising settings screen that must be set.  These values can be obtained by logging into PayPal:
 
 **Donate Button Code**
 
@@ -173,7 +172,7 @@ PayPal has more information on using a donate button here: <a href="https://www.
 
 **Instant Payment Notification**
 
-Instant Payment Notification or IPN is a secondary measure to ensure that a PayPal donation is recorded by the personal fundraiser.  This is used in cases where a donor closes their browser window after submitting a donation but before returning to your site.
+Instant Payment Notification or IPN is a secondary measure to ensure that a PayPal donation is recorded by the Bike Nantucket Fundraiser.  This is used in cases where a donor closes their browser window after submitting a donation but before returning to your site.
 
 1. Click My Account tab.
 1. Click on Profile.
@@ -193,22 +192,22 @@ If you are using PayPal's developer sandbox for testing, check this checkbox; ot
  
 Using Authorize.Net first requires that you have a SSL Certificate for your site and the capability of running at least part of your site via https.
 
-In order to work properly with the Personal Fundraiser plugin, there are several settings that must be obtained from your Authorize.Net account.  These values can be obtained by logging into Authorize.Net:
+In order to work properly with the Bike Nantucket Fundraiser plugin, there are several settings that must be obtained from your Authorize.Net account.  These values can be obtained by logging into Authorize.Net:
 
 **API Login ID**
 
 1. Click on Account.
 1. Under Security Settings, click on API Login ID and Transaction Key.
-1. If an API Login ID value has already been generated and is visible, copy the API Login ID from the API Login ID and Transaction Key screen and paste it in the *API Login ID* field on the Personal Fundraiser settings screen.
+1. If an API Login ID value has already been generated and is visible, copy the API Login ID from the API Login ID and Transaction Key screen and paste it in the *API Login ID* field on the Bike Nantucket Fundraiser settings screen.
 1. If an API Login ID value has not already been generated: do the following, type in your Secret Answer. You should have configured a Secret Question and Secret Answer during account activation.
-1. Click Submit to continue. The API Login ID and Transaction Key generated for your payment gateway account appear.  Copy these values to the corresponding values on the Personal Fundraiser settings screen.
+1. Click Submit to continue. The API Login ID and Transaction Key generated for your payment gateway account appear.  Copy these values to the corresponding values on the Bike Nantucket Fundraiser settings screen.
 
 **Transaction Key**
 
 1. Click on Account.
 1. Under Security Settings, click on API Login ID and Transaction Key.
 1. Under the section titled Create New Transaction Key, type in your Secret Answer. You should have configured a Secret Question and Secret Answer during account activation.
-1. Click Submit to continue. The API Login ID and Transaction Key generated for your payment gateway account appear.  Copy these values to the corresponding values on the Personal Fundraiser settings screen.
+1. Click Submit to continue. The API Login ID and Transaction Key generated for your payment gateway account appear.  Copy these values to the corresponding values on the Bike Nantucket Fundraiser settings screen.
 
 **Product/Donation name** 
 
@@ -225,7 +224,7 @@ Check this checkbox if you are using a test Authorize.Net account; otherwise it 
 
 == Screenshots ==
 
-1. Create Personal Fundraiser Screen.
+1. Create Bike Nantucket Fundraiser Screen.
 2. Optional user registration.
 3. Add outside donations from admin.
 
@@ -240,7 +239,7 @@ Check this checkbox if you are using a test Authorize.Net account; otherwise it 
 * Fixed required validation to work on images and textareas.
 
 = 0.8.1 =
-* Fixed javascript error that was not allowing new fields to be added on the personal fundraiser settings page.
+* Fixed javascript error that was not allowing new fields to be added on the Bike Nantucket Fundraiser settings page.
 
 = 0.8 =
 * Support for WordPress 3.6.x and 3.7.x.
@@ -249,7 +248,7 @@ Check this checkbox if you are using a test Authorize.Net account; otherwise it 
 * Shortcodes now work on pages/posts other than the campaign pages.
 * Upgraded jQuery UI CSS to 1.10.3 to match WordPress core upgrade to jQuery UI 1.10.3.
 * When creating a new campaign, the user is now redirected to the new campaign page once the campaign has been created.
-* New shortcode,[pfund-total-campaigns] to display the total number of campaigns published.
+* New shortcode,[bnfund-total-campaigns] to display the total number of campaigns published.
 * The file jquery.validationEngine-en-US.js is no longer needed and therefore does not need to be translated for other languages.
 * The download to CSV functionality for campaign donations now includes date and comment.  Donations received before upgrading will not have dates in the CSV, but donations after the upgrade will.
 
@@ -266,7 +265,7 @@ Check this checkbox if you are using a test Authorize.Net account; otherwise it 
 * Added support for Authorize.Net thanks to the work of Justin Carboneau from Exygy.
 * Fixed issue of donation listing not displaying donations from edit campaign screen.
 * Fixed issue of manual donation not accepting decimal values.
-* Fixed issue of bullets appearing with pfund-comments shortcode.
+* Fixed issue of bullets appearing with bnfund-comments shortcode.
 * Fixed issue of warning message when other plugins/themes apply the "the_title" filter without the second parameter.
 * Fixed issue of user avatar incorrectly displaying user who published the campaign versus the user who created the campaign.
 
@@ -283,30 +282,30 @@ Check this checkbox if you are using a test Authorize.Net account; otherwise it 
 * Donations can now be viewed from campaign edit screen.
 * Donations can now be downloaded from the campaign edit screen as a CSV file for use in Excel and other spreadsheet programs.
 * Usability improvements to login/register dialogs.
-* Added pfund-progress-bar shortcode to display a progress bar for the campaign.
-* Added options to disable Campaign Listing and Cause Listing pages.
-* Added ability to modify what cause a campaign uses.
+* Added bnfund-progress-bar shortcode to display a progress bar for the campaign.
+* Added options to disable Campaign Listing and event Listing pages.
+* Added ability to modify what event a campaign uses.
 * Added ability for administrators to modify the number of givers (giver tally) for a campaign.
-* Added default goal value for causes.
+* Added default goal value for events.
 * Added attribute, "default" to image fields so that a default image can be used when a user doesn't include one.
-* Added attribute, "max_givers" to pfund-giver-list shortcode to limit number of givers displayed.
-* Changed filter 'pfund-transaction-array' to pfund_transaction_array for better naming convention.
-* Added "pfund_login_javascript_function" filter to allow a custom javascript function to be called when user chooses to login.
-* Added "pfund_register_javascript_function" filter to allow a custom javascript function to be called when user chooses to register.
+* Added attribute, "max_givers" to bnfund-giver-list shortcode to limit number of givers displayed.
+* Changed filter 'bnfund-transaction-array' to bnfund_transaction_array for better naming convention.
+* Added "bnfund_login_javascript_function" filter to allow a custom javascript function to be called when user chooses to login.
+* Added "bnfund_register_javascript_function" filter to allow a custom javascript function to be called when user chooses to register.
 
 = 0.7.5 =
 
-* Fixed issue of new sample causes being created everytime personal fundraiser
+* Fixed issue of new sample events being created everytime Bike Nantucket Fundraiser
 options are updated.
 * Changed comments to correctly go through proper comment filtering.
-* Changed action, pfund-add-gift, to pfund_add_gift for consistency.
-* Added filters: pfund_field_types, pfund_<CUSTOMTYPE>_input, pfund_<CUSTOMTYPE>_shortcode and pfund_render_field_list_item to allow customization of plugin with custom field types.
-* Added shortcode, pfund-giver-list, to display the list of supporters for the current campaign.
-* Added shortcode, pfund-user-avatar, to display the avatar of the user who created the campaign.
-* Added shortcode, pfund-campaign-permalink, to display the permalink(URL) for the campaign.
+* Changed action, bnfund-add-gift, to bnfund_add_gift for consistency.
+* Added filters: bnfund_field_types, bnfund_<CUSTOMTYPE>_input, bnfund_<CUSTOMTYPE>_shortcode and bnfund_render_field_list_item to allow customization of plugin with custom field types.
+* Added shortcode, bnfund-giver-list, to display the list of supporters for the current campaign.
+* Added shortcode, bnfund-user-avatar, to display the avatar of the user who created the campaign.
+* Added shortcode, bnfund-campaign-permalink, to display the permalink(URL) for the campaign.
 * Fixed incorrect subject on email sent when a campaign goal is met.
 * Fixed issue with image upload.
-* Fixed issue with title and url getting out of sync when editing new campaign from cause screen.
+* Fixed issue with title and url getting out of sync when editing new campaign from event screen.
 
 = 0.7.4 =
 
@@ -317,26 +316,26 @@ options are updated.
 * Fixed DateTime issue with certain versions of PHP.
 * Fixed issue with published email being sent every time an administrator updates a campaign.
 * Added logic to send emails using the proper contact information for a campaign.  If the campaign has a user display name and user email field, use those values instead of the post author's contact information.  This is necessary for use cases where the campaign is created by an administrator, but the notifications should be sent to another contact.
-* Added action, pfund-add-gift, to allow gifts from other ecommerce solutions to be processed.
+* Added action, bnfund-add-gift, to allow gifts from other ecommerce solutions to be processed.
 * Fixed donate button and giver tally to display on campaign creation screen.
 * Added a thank you popup when a donation is received.
 * Added formatting to dollar amounts when displayed.
 * Changed default user role required to create campaigns to administrator.
 * Mailchimp integration now uses display name vs first name and last name.
-* Added sample cause and sample PayPal donate button for demonstration purposes.
+* Added sample event and sample PayPal donate button for demonstration purposes.
 
 = 0.7.2 =
 
 * Cleaned up PHP notice messages.
 * Added date format option.
 * Added end date field.
-* Added pfund-days-left shortcode.
+* Added bnfund-days-left shortcode.
 
 = 0.7.1 =
 
 * Fixed Use MailChimp option not properly updating.
 * Fixed PayPal to not always use PayPal sandbox (now configurable).
-* Added pfund-giver-tally shortcode.
+* Added bnfund-giver-tally shortcode.
 
 = 0.7 =
 

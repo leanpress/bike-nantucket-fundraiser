@@ -1,5 +1,5 @@
 <?php
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design ( http://aucoeurdesign.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -19,7 +19,7 @@
 		require_once dirname( __FILE__ ) . '/../../../wp-load.php';
 	}
     $post_id = $_REQUEST['p'];
-    check_admin_referer( 'pfund-campaign-csv'.$post_id,'n' );
+    check_admin_referer( 'bnfund-campaign-csv'.$post_id,'n' );
 
     header( 'Cache-Control: no-cache' );
 	header( 'Expires: -1' );
@@ -38,8 +38,8 @@
 
     $out = fopen( 'php://output', 'w' );
     //Allow additional information to be exported to CSV file.
-    do_action('pfund_csv_export', $out);
-    $transactions = get_post_meta( $post_id, '_pfund_transactions' );
+    do_action('bnfund_csv_export', $out);
+    $transactions = get_post_meta( $post_id, '_bnfund_transactions' );
     if (! empty( $transactions ) ) {
         fputcsv( $out, array(
             'Date', 'First Name', 'Last Name', 'Email', 'Anonymous', 'Amount', 'Comment'

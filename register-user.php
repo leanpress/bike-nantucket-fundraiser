@@ -1,5 +1,5 @@
 <?php
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design ( http://aucoeurdesign.org)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 require_once( ABSPATH . 'wp-admin/includes/post.php' );
 
-$registerResult = pfund_register_user();
+$registerResult = bnfund_register_user();
 if (is_wp_error($registerResult) ) {
     echo json_encode($registerResult); 
 } else {
