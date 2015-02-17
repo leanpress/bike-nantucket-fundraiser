@@ -248,7 +248,7 @@ function bnfund_activate( $flush_rules = true ) {
 }
 
 /**
- * Add personal fundraiser rewrite rules
+ * Add bike nantucket fundraiser rewrite rules
  * @param boolean $flush_rules If true, flush the rewrite rules
  */
 function bnfund_add_rewrite_rules( $flush_rules = true ) {
@@ -289,7 +289,7 @@ function bnfund_init() {
 
 
 /**
- * Before personal fundraiser options are saved, add/update sort order for the
+ * Before bike nantucket fundraiser options are saved, add/update sort order for the
  * fields.
  * @param mixed $new_options The options that are about to be saved.
  * @param mixed $old_options The current options.
@@ -322,7 +322,7 @@ function bnfund_pre_update_options( $new_options, $old_options ) {
 
 
 /**
- * Add personal fundraiser query vars.
+ * Add bike nantucket fundraiser query vars.
  * @param array $query_array current list of query vars
  * @return array updated list of query vars.
  */
@@ -334,7 +334,7 @@ function bnfund_query_vars( $query_array ) {
 
 
 /**
- * Handler that fires when personal fundraiser options are updated.
+ * Handler that fires when bike nantucket fundraiser options are updated.
  * @param mixed $oldvalue options before they were updated.
  * @param mixed $newvalue options after they were updated.
  */
@@ -392,7 +392,7 @@ function _bnfund_load_translation_file() {
 }
 
 /**
- * Register the post types used by personal fundraiser.
+ * Register the post types used by bike nantucket fundraiser.
  */
 function _bnfund_register_types() {
 	$bnfund_options = get_option( 'bnfund_options' );
