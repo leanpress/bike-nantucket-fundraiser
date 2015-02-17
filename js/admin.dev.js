@@ -1,4 +1,4 @@
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design (http://aucoeurdesign.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -14,9 +14,9 @@
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 jQuery(function($) {    
-    if (typeof pfund !== "undefined" && pfund.validation_rules) {
+    if (typeof bnfund !== "undefined" && bnfund.validation_rules) {
         $.validationEngineLanguage = {
-            allRules: pfund.validation_rules
+            allRules: bnfund.validation_rules
         };
     }
     /**
@@ -26,14 +26,14 @@ jQuery(function($) {
 		if (e) {
 			e.preventDefault();
 		}
-		var insertBefore = $(this).closest('tbody').find('tr.pfund-add-row');
-		var newRow = $('#_pfund-template-row').clone(true);
-		newRow.find('.pfund-data-type-edit textarea').val('');
+		var insertBefore = $(this).closest('tbody').find('tr.bnfund-add-row');
+		var newRow = $('#_bnfund-template-row').clone(true);
+		newRow.find('.bnfund-data-type-edit textarea').val('');
 		updateId(newRow, "***", true);
-		newRow.find('.pfund-shortcode-field').html('');
-		newRow.find('.pfund-data-sample-view').html('');
+		newRow.find('.bnfund-shortcode-field').html('');
+		newRow.find('.bnfund-data-sample-view').html('');
 		insertBefore.before(newRow);
-		var typeField = newRow.find('.pfund-type-field');
+		var typeField = newRow.find('.bnfund-type-field');
 		typeField.val('text');
 		$.proxy(typeFieldChanged, typeField)();
 	}
@@ -44,11 +44,11 @@ jQuery(function($) {
 	function deleteField(e) {
 		e.preventDefault();
 		var field = $(this);
-		fieldRowCount = field.closest('tbody').children('tr.pfund-field-row').length;
+		fieldRowCount = field.closest('tbody').children('tr.bnfund-field-row').length;
 		if (fieldRowCount == 1) {
 			$.proxy(addField, this)();
 		}
-		field.closest('tr.pfund-field-row').remove();
+		field.closest('tr.bnfund-field-row').remove();
 	}
 
     /**
@@ -73,9 +73,9 @@ jQuery(function($) {
      */
 	function editDataField(e) {
 		e.preventDefault();
-		var sampleField = $(this).closest('.pfund-data-type-sample');
+		var sampleField = $(this).closest('.bnfund-data-type-sample');
 		sampleField.hide();
-		sampleField.next('.pfund-data-type-edit').show();
+		sampleField.next('.bnfund-data-type-edit').show();
 	}
 
     /**
@@ -86,12 +86,12 @@ jQuery(function($) {
 		var label = $(this).val().toLowerCase();
 		label = label.replace(/\s/g, '-');
 		var currentRow = $(this).closest('tr');
-		var fieldType = currentRow.find('select.pfund-type-field');
+		var fieldType = currentRow.find('select.bnfund-type-field');
 		if (fieldType.length) {
-			var shortCodeField = currentRow.find('.pfund-shortcode-field');
+			var shortCodeField = currentRow.find('.bnfund-shortcode-field');
 			var shortCode = '';
 			if (label.length > 0) {
-				shortCode += '[pfund-' + label;
+				shortCode += '[bnfund-' + label;
 				if (fieldType.val() === 'fixed') {
 					shortCode += ' value="?"';
 				}
@@ -125,17 +125,17 @@ jQuery(function($) {
      */
 	function showDonations(e) {
         var showLink = $(this);
-		var st = showLink.data('pfund-donation-start');
+		var st = showLink.data('bnfund-donation-start');
         var num = 20;
 
-		showLink.data('pfund-donation-start', st+num);
+		showLink.data('bnfund-donation-start', st+num);
 		
 		$('#commentsdiv img.waiting').show();
 
 		var data = {
-			'action' : 'pfund_get_donations_list',
+			'action' : 'bnfund_get_donations_list',
             'mode' : 'single',
-			'_ajax_nonce' : $('#pfund_get_donations_nonce').val(),
+			'_ajax_nonce' : $('#bnfund_get_donations_nonce').val(),
 			'p' : $('#post_ID').val(),
 			'start' : st,
 			'number' : num
@@ -153,13 +153,13 @@ jQuery(function($) {
 					theList = theExtraList = null;
 					$("a[className*=':']").unbind();
 
-					if ( showLink.data('pfund-donation-start') > showLink.data('pfund-donation-total') )
-						$('#pfund-show-donations').hide();
+					if ( showLink.data('bnfund-donation-start') > showLink.data('bnfund-donation-total') )
+						$('#bnfund-show-donations').hide();
 					else
-						$('#pfund-show-donations').html(pfund.show_more_donations);
+						$('#bnfund-show-donations').html(bnfund.show_more_donations);
 					return;
 				} else if ( 1 == r ) {
-					$('#show-donations').parent().html(pfund.no_more_donations);
+					$('#show-donations').parent().html(bnfund.no_more_donations);
 					return;
 				}
 
@@ -178,9 +178,9 @@ jQuery(function($) {
 		var typeField = $(this);
 		var fieldType = typeField.val();
 		var currentRow = typeField.closest('tr');
-		var dataField = currentRow.find('.pfund-data-type-edit');
+		var dataField = currentRow.find('.bnfund-data-type-edit');
 		var dataVal = dataField.find('textarea').first().val();
-		var sampleField = currentRow.find('.pfund-data-type-sample');
+		var sampleField = currentRow.find('.bnfund-data-type-sample');
 		switch (fieldType) {
 			case 'select':
 				if (dataVal === '') {
@@ -188,7 +188,7 @@ jQuery(function($) {
 					sampleField.hide();
 				} else {
 					dataField.hide();
-					displayDataTypeSample(dataVal, fieldType, sampleField.find('.pfund-data-sample-view'));
+					displayDataTypeSample(dataVal, fieldType, sampleField.find('.bnfund-data-sample-view'));
 					sampleField.show();
 				}
 				break;
@@ -196,7 +196,7 @@ jQuery(function($) {
 				dataField.hide();
 				sampleField.hide();
 		}
-		var labelField = currentRow.find('.pfund-label-field');
+		var labelField = currentRow.find('.bnfund-label-field');
 		$.proxy(labelFieldChanged, labelField)();
 	}
 
@@ -205,12 +205,12 @@ jQuery(function($) {
      */
 	function updateDataField(e) {
 		e.preventDefault();
-		var dataField = $(this).closest('.pfund-data-type-edit');
+		var dataField = $(this).closest('.bnfund-data-type-edit');
 		var dataVal = dataField.find('textarea').first().val();
-		var sampleField = dataField.prev('.pfund-data-type-sample');
-		var fieldType = $(this).closest('tr').find('select.pfund-type-field').val();
+		var sampleField = dataField.prev('.bnfund-data-type-sample');
+		var fieldType = $(this).closest('tr').find('select.bnfund-type-field').val();
 		dataField.hide();
-		displayDataTypeSample(dataVal, fieldType, sampleField.find('.pfund-data-sample-view'));
+		displayDataTypeSample(dataVal, fieldType, sampleField.find('.bnfund-data-sample-view'));
 		sampleField.show();
 	}
 
@@ -219,7 +219,7 @@ jQuery(function($) {
      */
 	function updateId(aRow, newId, clearValues) {		
 		var oldId = aRow[0].id;
-		aRow.find('[name^="pfund_options"]').each(function() {
+		aRow.find('[name^="bnfund_options"]').each(function() {
 			var name = $(this).attr('name');
 			name = name.replace('['+oldId+']','['+newId+']');
 			$(this).attr('name',name);
@@ -235,7 +235,7 @@ jQuery(function($) {
      * filled in.
      */
     function validateDonationAdd(e) {        
-        if (!$('#pfund-add-donation-fields').validationEngine({
+        if (!$('#bnfund-add-donation-fields').validationEngine({
                 returnIsValid:true,
                 promptPosition: 'topLeft'
             })) {
@@ -243,17 +243,17 @@ jQuery(function($) {
         }        
     }
 
-	$('.pfund-add-field').click(addField);
-	$('.pfund-delete-field').click(deleteField);
-	$('.pfund-data-field-edit').click(editDataField);
-	$('.pfund-data-field-update').click(updateDataField);
-	$('.pfund-move-dn-field').click(moveFieldDown);
-	$('.pfund-move-up-field').click(moveFieldUp);	
-	$('.pfund-type-field').change(typeFieldChanged);
-	$('.pfund-label-field').change(labelFieldChanged);
+	$('.bnfund-add-field').click(addField);
+	$('.bnfund-delete-field').click(deleteField);
+	$('.bnfund-data-field-edit').click(editDataField);
+	$('.bnfund-data-field-update').click(updateDataField);
+	$('.bnfund-move-dn-field').click(moveFieldDown);
+	$('.bnfund-move-up-field').click(moveFieldUp);	
+	$('.bnfund-type-field').change(typeFieldChanged);
+	$('.bnfund-label-field').change(labelFieldChanged);
 
-	$('#pfund-show-donations').click(showDonations);
+	$('#bnfund-show-donations').click(showDonations);
 
-    $('#pfund-add-donation').click(validateDonationAdd);
+    $('#bnfund-add-donation').click(validateDonationAdd);
 
 });

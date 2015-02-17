@@ -1,4 +1,4 @@
-/*  Copyright 2013 CURE International  (email : info@cure.org)
+/*  Copyright 2015 Au Coeur Design (http://aucoeurdesign.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -37,13 +37,13 @@
 
 				var maskPassword = function(anEvent) {
 					if (!$maskAction.data('masked')) {
-						$maskAction.html(pfund.unmask_passwd);
+						$maskAction.html(bnfund.unmask_passwd);
 						$unmasked.hide();
 						$masked.show();
 						update($masked,$unmasked);
 						$maskAction.data('masked',true);
 					} else {
-						$maskAction.html(pfund.mask_passwd);
+						$maskAction.html(bnfund.mask_passwd);
 						$masked.hide();
 						$unmasked.show();
 						update($unmasked,$masked);
@@ -65,12 +65,12 @@
 
 jQuery(function($) {
     $.validationEngineLanguage = {
-        allRules: pfund.validation_rules
+        allRules: bnfund.validation_rules
     };
     
-    var campaignId = $('#pfund-campaign-id');
+    var campaignId = $('#bnfund-campaign-id');
     if (campaignId.length > 0) {
-        $.validationEngineLanguage.allRules.pfundSlug.extraData = campaignId.val();
+        $.validationEngineLanguage.allRules.bnfundSlug.extraData = campaignId.val();
     }
 	var campaignValid = false;
 	var dialogSettings = {
@@ -80,11 +80,11 @@ jQuery(function($) {
 		width: 600,
 		buttons: [
 			{
-				text: pfund.ok_btn,
+				text: bnfund.ok_btn,
 				click:  updateCampaign
 			},
 			{
-				text: pfund.cancel_btn,
+				text: bnfund.cancel_btn,
 				click:  closeDialog
 			}
 		],
@@ -97,11 +97,11 @@ jQuery(function($) {
 	 * @param e window.onbeforeunload event
 	 */
 	function checkForDirtyForm(e) {
-		if (!$('#pfund-form').data('dirty')) {
+		if (!$('#bnfund-form').data('dirty')) {
 			return;
 		}
 		var e = e || window.event;
-		var warningMsg = pfund.save_warning;			
+		var warningMsg = bnfund.save_warning;			
 		// For IE and Firefox prior to version 4
 		if (e) {
 			e.returnValue = warningMsg;
@@ -125,22 +125,22 @@ jQuery(function($) {
 	 */
 	function inputChanged() {
 		campaignValid = false;
-		$('#pfund-form').data('dirty',true);
+		$('#bnfund-form').data('dirty',true);
 	}
 
     /**
      * Perform the actual login for the user.
      */
 	function loginUser() {
-		document.location.href = $('#pfund-login-link').attr('href');
+		document.location.href = $('#bnfund-login-link').attr('href');
 	}
 
 	/**
 	 * Handler when XHR fails to register user.
 	 */
 	function registerFail() {
-		$('#pfund-wait-dialog').dialog('close');
-		$.validationEngine.buildPrompt('#pfund-register-email',pfund.register_fail,'error');
+		$('#bnfund-wait-dialog').dialog('close');
+		$.validationEngine.buildPrompt('#bnfund-register-email',bnfund.register_fail,'error');
 	}
 
 	/**
@@ -150,20 +150,20 @@ jQuery(function($) {
 	 */
 	function registerResult(data) {
 		if (data.success) {
-			$('#pfund-user-login').val($('#pfund-register-username').val());
-			$('#pfund-user-pass').val($('#pfund-register-pass').val());
-			$('#pfund-login-form').submit();			
+			$('#bnfund-user-login').val($('#bnfund-register-username').val());
+			$('#bnfund-user-pass').val($('#bnfund-register-pass').val());
+			$('#bnfund-login-form').submit();			
 		} else {
-			$('#pfund-wait-dialog').dialog('close');
+			$('#bnfund-wait-dialog').dialog('close');
 			if (data.errors) {
 				if (data.errors['invalid_email']) {
-					$.validationEngine.buildPrompt('#pfund-register-email',pfund.invalid_email,'error');
+					$.validationEngine.buildPrompt('#bnfund-register-email',bnfund.invalid_email,'error');
 				}
 				if (data.errors['email_exists']) {
-					$.validationEngine.buildPrompt('#pfund-register-email',pfund.email_exists,'error');
+					$.validationEngine.buildPrompt('#bnfund-register-email',bnfund.email_exists,'error');
 				}
 				if (data.errors['username_exists']) {
-					$.validationEngine.buildPrompt('#pfund-register-username',pfund.username_exists,'error');
+					$.validationEngine.buildPrompt('#bnfund-register-username',bnfund.username_exists,'error');
 				}
 				if (data.errors['registerfail']) {
 					registerFail();
@@ -178,9 +178,9 @@ jQuery(function($) {
      * Register a new user.
      */
 	function registerUser() {
-		var registerForm = $('#pfund-create-account-form');
+		var registerForm = $('#bnfund-create-account-form');
         if (registerForm.validationEngine({returnIsValid:true,scroll: false})) {
-			$('#pfund-wait-dialog').html(pfund.reg_wait_msg);
+			$('#bnfund-wait-dialog').html(bnfund.reg_wait_msg);
 			showWaitDialog();
 	        registerForm.ajaxSubmit({
 	            dataType: 'json',
@@ -195,11 +195,11 @@ jQuery(function($) {
 	 * Display the proper edit dialog in a modal window.
 	 */
 	function showEditDialog() {
-		var editDialog = $('#pfund-edit-dialog');
+		var editDialog = $('#bnfund-edit-dialog');
 		if (editDialog.length > 0) {
 			editDialog.dialog(dialogSettings);
 		} else {
-			$('#pfund-add-dialog').dialog(dialogSettings);
+			$('#bnfund-add-dialog').dialog(dialogSettings);
 		}
 	}
 
@@ -207,29 +207,29 @@ jQuery(function($) {
      * Display the popup to allow a user to register.
      */
 	function showRegister() {
-		$('#pfund-update-dialog').dialog('close');
-		$('#pfund-register-dialog').dialog({		
+		$('#bnfund-update-dialog').dialog('close');
+		$('#bnfund-register-dialog').dialog({		
 			modal:true,
 			width: 300,
 			resizable: false,
 			buttons: [{
-				text: pfund.register_btn,
+				text: bnfund.register_btn,
 				click:  registerUser
 			},
 			{
-				text: pfund.cancel_btn,
+				text: bnfund.cancel_btn,
 				click:  closeDialog
 			}],
 			zIndex: 99999
 		});
-		$("#pfund-register-pass").maskPassword("#pfund-mask-pass");
+		$("#bnfund-register-pass").maskPassword("#bnfund-mask-pass");
 	}
 
 	/**
 	 * Display the please wait dialog
 	 */
 	function showWaitDialog() {
-		$('#pfund-wait-dialog').dialog({
+		$('#bnfund-wait-dialog').dialog({
 			closeOnEscape: false,
             draggable: false,
 			modal:true,
@@ -243,9 +243,9 @@ jQuery(function($) {
 	 */
 	function submitForm() {
 		$('.ui-dialog').dialog().dialog('close');
-		$('#pfund-form').data('dirty',false);
+		$('#bnfund-form').data('dirty',false);
 		showWaitDialog();
-		document.pfund_form.submit();
+		document.bnfund_form.submit();
 	}
 
 	/**
@@ -253,13 +253,13 @@ jQuery(function($) {
 	 * process of the form and if that is successful, the form will be submitted.
 	 */
 	function updateCampaign() {
-		if ($('.pfund-camp-locationformError').hasClass('ajaxed')) {
-			$('.pfund-camp-locationformError').removeClass('ajaxed');
+		if ($('.bnfund-camp-locationformError').hasClass('ajaxed')) {
+			$('.bnfund-camp-locationformError').removeClass('ajaxed');
 		}
-		var campaignForm = $('#pfund-form');
+		var campaignForm = $('#bnfund-form');
 			$(document).unbind('ajaxSuccess');
 			$(document).bind('ajaxSuccess',{
-				errId: 'pfund-camp-locationformError'
+				errId: 'bnfund-camp-locationformError'
 			},validateAjax);
 
 		campaignValid = campaignForm.validationEngine({
@@ -284,43 +284,43 @@ jQuery(function($) {
 		}
 	}
 
-	$('#pfund-form input').change(inputChanged);
-	$('#pfund-add-dialog').dialog(dialogSettings);
-	$('.pfund-edit-btn').click(showEditDialog);
-	if (pfund.date_format) {
-		$('.pfund-date').datepicker({
-			dateFormat: pfund.date_format
+	$('#bnfund-form input').change(inputChanged);
+	$('#bnfund-add-dialog').dialog(dialogSettings);
+	$('.bnfund-edit-btn').click(showEditDialog);
+	if (bnfund.date_format) {
+		$('.bnfund-date').datepicker({
+			dateFormat: bnfund.date_format
 		});
 	} else {
-		$('.pfund-date').datepicker();
+		$('.bnfund-date').datepicker();
 	}
 
 	var update_btns = [];
 	var close_btn = '';
-	if ($('#pfund-login-link').length == 1) {
+	if ($('#bnfund-login-link').length == 1) {
 		var login_btn_fn = loginUser;
-		if (pfund.login_fn) {
-			login_btn_fn  = window[pfund.login_fn];
+		if (bnfund.login_fn) {
+			login_btn_fn  = window[bnfund.login_fn];
 		}
 		update_btns.push({
-			text: pfund.login_btn,
-			id: 'pfund-login-btn',
+			text: bnfund.login_btn,
+			id: 'bnfund-login-btn',
 			click:  login_btn_fn
 		});
-		if ($('#pfund-register-link').length == 1) {
+		if ($('#bnfund-register-link').length == 1) {
 			var register_btn_fn = showRegister;
-			if (pfund.register_fn) {
-				register_btn_fn  = window[pfund.register_fn];
+			if (bnfund.register_fn) {
+				register_btn_fn  = window[bnfund.register_fn];
 			}
 			update_btns.push({
-				text: pfund.register_btn,
-				id: 'pfund-register-btn',
+				text: bnfund.register_btn,
+				id: 'bnfund-register-btn',
 				click:  register_btn_fn
 			});
 		}
-		close_btn = pfund.continue_editing_btn;
+		close_btn = bnfund.continue_editing_btn;
 	} else {
-		close_btn = pfund.ok_btn;
+		close_btn = bnfund.ok_btn;
 	}
 	update_btns.push({
 		text: close_btn,
@@ -328,24 +328,24 @@ jQuery(function($) {
 	});
 
 
-	$('#pfund-update-dialog').dialog({
+	$('#bnfund-update-dialog').dialog({
 		modal: true,
 		resizable: false,
 		buttons: update_btns,
 		zIndex: 99999
 	});
-	$('#pfund-register-link').click(showRegister);
+	$('#bnfund-register-link').click(showRegister);
 	
 	window.onbeforeunload = checkForDirtyForm;
 });
 
-function pfund_validate_required_file() {    
+function bnfund_validate_required_file() {    
     var currentItem,
         i,
         itemsToCheck = jQuery("input[class*='requiredFile']");
     for (i=0;i< itemsToCheck.length;i++) {
         currentItem = jQuery(itemsToCheck[i]);
-        if (itemsToCheck[i].value === '' && !currentItem.data('pfundFileSet') ) {
+        if (itemsToCheck[i].value === '' && !currentItem.data('bnfundFileSet') ) {
             return false;
         }        
     }
