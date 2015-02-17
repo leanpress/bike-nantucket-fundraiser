@@ -14,8 +14,6 @@ Expand your fundraising base by getting your event participants involved in the 
 
 This plugin provides organizations the ability to allow their fans and constituents to create their own custom online fundraisers using PayPal donations and other payment methods.
 
-All donations for this plugin go to provide life-changing surgery for children in the developing world. Learn more at <a href="http://cure.org/curekids">CURE International</a>.
-
 == Installation ==
 
 1. Upload the plugin to your plugins directory and activate.
