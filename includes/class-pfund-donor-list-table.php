@@ -16,7 +16,7 @@
 */
 
 /**
- * Personal Fundraiser donation list table class.
+ * bike nantucket fundraiser donation list table class.
  * Used to display the list of donations to an administrator.
  *
  * @see WP_Post_Comments_List_Table

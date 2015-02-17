@@ -83,7 +83,7 @@ function bnfund_admin_donation_added( $location ) {
 function bnfund_admin_init() {
 	$options = get_option( 'bnfund_options' );	
 	register_setting( 'bnfund_options', 'bnfund_options' );
-	add_settings_section( 'bnfund_main_options', __( 'Personal Fundraiser Options', 'bnfund' ), 'bnfund_main_section_text', 'bnfund' );
+	add_settings_section( 'bnfund_main_options', __( 'Bike Nantucket Fundraiser Options', 'bnfund' ), 'bnfund_main_section_text', 'bnfund' );
 	add_settings_field(
 		'bnfund_campaign_slug',
 		__( 'Campaign Slug', 'bnfund' ),
@@ -460,7 +460,7 @@ function bnfund_admin_init() {
 	);    
 	add_settings_section(
 		'bnfund_field_options',
-		__( 'Personal Fundraiser Fields', 'bnfund' ),
+		__( 'bike nantucket fundraiser Fields', 'bnfund' ),
 		'bnfund_field_section_text',
 		'bnfund'
 	);
@@ -481,7 +481,7 @@ function bnfund_admin_js() {
  * Initialize admin
  */
 function bnfund_admin_setup() {
-	$menu = add_options_page( __( 'Personal Fundraiser Settings', 'bnfund' ), __( 'Personal Fundraiser', 'bnfund' ),
+	$menu = add_options_page( __( 'bike nantucket fundraiser Settings', 'bnfund' ), __( 'bike nantucket fundraiser', 'bnfund' ),
 			'manage_options', 'personal-fundraiser-settings', 'bnfund_options_page');
 	add_action( 'load-'.$menu, 'bnfund_admin_js' );
 	add_meta_box( 'bnfund-campaign-meta', __( 'Personal Fundraising fields', 'bnfund' ), 'bnfund_campaign_meta', 'bnfund_campaign', 'normal', 'high' );
@@ -597,8 +597,8 @@ function bnfund_campaign_sortable_columns( $columns ) {
 
 /**
  * Fired by the comment_row_actions action to filter the comment actions
- * for personal fundraiser campaigns since most of the comments actions are not
- * applicable for personal fundraiser campaigns.
+ * for bike nantucket fundraiser campaigns since most of the comments actions are not
+ * applicable for bike nantucket fundraiser campaigns.
  * @param array $actions the current comment row actions.
  * @return array the comment row actions to use.
  */
@@ -655,11 +655,11 @@ function bnfund_edit_form_tag() {
 }
 
 /**
- * Text to display in personal fundraising settings in the Personal Fundraiser Fields
+ * Text to display in personal fundraising settings in the bike nantucket fundraiser Fields
  * section.
  */
 function bnfund_field_section_text() {
-	echo '<p>'.__( 'Define your fields for personal fundraisers', 'bnfund' ).'</p>';
+	echo '<p>'.__( 'Define your fields for bike nantucket fundraisers', 'bnfund' ).'</p>';
 }
 
 /**
@@ -736,7 +736,7 @@ function bnfund_get_donations_list() {
  * Text to display in personal fundraising settings in the Mandrill section.
  */
 function bnfund_mandrill_section_text() {
-	echo '<p>'.__( 'Mandrill settings for personal fundraiser', 'bnfund' ).'</p>';
+	echo '<p>'.__( 'Mandrill settings for bike nantucket fundraiser', 'bnfund' ).'</p>';
 	$options = get_option( 'bnfund_options' );
 }
 
@@ -746,7 +746,7 @@ function bnfund_mandrill_section_text() {
 function bnfund_main_section_text() {
 	$options = get_option( 'bnfund_options' );
 	echo '<input type="hidden" value="'.$options['version'].'" name="bnfund_options[version]">';
-	echo '<p>'.__( 'General settings for personal fundraiser', 'bnfund' ).'</p>';
+	echo '<p>'.__( 'General settings for bike nantucket fundraiser', 'bnfund' ).'</p>';
 }
 
 /**
@@ -797,7 +797,7 @@ function bnfund_options_page() {
 ?>
 	<div class="wrap">
 	<?php screen_icon(); ?>
-		<h2><?php _e( 'Personal Fundraiser', 'bnfund' );?></h2>
+		<h2><?php _e( 'bike nantucket fundraiser', 'bnfund' );?></h2>
 		<form action="options.php" method="post">
 		<?php
 			settings_fields( 'bnfund_options' );
@@ -821,7 +821,7 @@ function bnfund_options_page() {
  * Text to display in personal fundraising settings in the PayPal section.
  */
 function bnfund_paypal_section_text() {
-	echo '<p>'.__( 'PayPal settings for personal fundraiser', 'bnfund' ).'</p>';
+	echo '<p>'.__( 'PayPal settings for bike nantucket fundraiser', 'bnfund' ).'</p>';
 }
 
 /**
@@ -836,7 +836,7 @@ function bnfund_permissions_section_text() {
  * Text to display in personal fundraising settings in the Authorize.Net section.
  */
 function bnfund_authorize_net_section_text() {
-	echo '<p>'.__( 'Authorize.Net settings for personal fundraiser', 'bnfund' ).'</p>';
+	echo '<p>'.__( 'Authorize.Net settings for bike nantucket fundraiser', 'bnfund' ).'</p>';
 }
 
 
@@ -854,7 +854,7 @@ function bnfund_plugin_action_links( $links, $file ) {
 }
 
 /**
- * Use custom updated messages for personal fundraiser events and campaigns.
+ * Use custom updated messages for bike nantucket fundraiser events and campaigns.
  * Fires through the post_updated_messages filter.
  * @param array $messages the currently defined messages.
  * @return array the messages appropriate to the type of post.
@@ -1095,7 +1095,7 @@ function _bnfund_option_fields() {
 }
 
 /**
- * Render a row on the personal fundraiser fields section of the settings.
+ * Render a row on the bike nantucket fundraiser fields section of the settings.
  * @param string $field_id The id of the field to add.
  * @param array $field the definition of the field.
  */

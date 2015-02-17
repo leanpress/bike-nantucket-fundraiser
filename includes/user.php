@@ -863,7 +863,7 @@ function bnfund_send_goal_reached_email( $transaction_array, $post, $goal ) {
 }
 
 /**
- * Setup the short codes that personal fundraiser uses.
+ * Setup the short codes that bike nantucket fundraiser uses.
  */
 function bnfund_setup_shortcodes() {
 	add_shortcode( 'bnfund-authorize-net-donate-form', 'bnfund_authorize_net_donate_form' );
@@ -1107,7 +1107,7 @@ function _bnfund_create_input_node( $doc, $parent, $name, $value, $type = 'hidde
 
 /**
  * Determines if current user can create campaigns or edit the current campaign.
- * @param array $bnfund_options The current options for personal fundraiser.
+ * @param array $bnfund_options The current options for bike nantucket fundraiser.
  * If the value isn't passed in, the option is retrieved.
  * @return boolean true if user can create; otherwise false.
  */
@@ -1132,7 +1132,7 @@ function _bnfund_current_user_can_create( $bnfund_options = array() ) {
 
 /**
  * Determines if current user can submit campaigns
- * @param array $bnfund_options The current options for personal fundraiser.
+ * @param array $bnfund_options The current options for bike nantucket fundraiser.
  * If the value isn't passed in, the option is retrieved.
  * @return boolean true if user can submit; otherwise false.
  */
@@ -1182,11 +1182,11 @@ function _bnfund_display_thanks() {
 }
 
 /**
- * Handler for the dynamic shortcodes created by personal fundraiser fields.
+ * Handler for the dynamic shortcodes created by bike nantucket fundraiser fields.
  * @param array $attrs the attributes for the shortcode
  * @param string $content the content between the shortcode begin and end tags.
  * @param string $tag the name of the shortcode.
- * @return string The data associated to the specified personal fundraiser field.
+ * @return string The data associated to the specified bike nantucket fundraiser field.
  */
 function _bnfund_dynamic_shortcode( $attrs, $content, $tag ) {
     $post = _bnfund_get_shortcode_campaign( $attrs );
